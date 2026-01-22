@@ -339,14 +339,16 @@
             background: none; /* إزالة الخلفية الجديدة */
         }
         
-        /* مؤشر القبلة القديم */
+        /* مؤشر القبلة: سهم */
         #rotatex {
-            background: linear-gradient(299deg, var(--sabha-color), var(--main-color));
+            background: linear-gradient(to top, var(--main-color), var(--sabha-color));
             height: 250px;
-            width: 10px;
-            border-radius: 68% 95%; /* شكل المؤشر القديم */
+            width: 15px; /* عرض أكبر قليلاً لرأس السهم */
+            /* رسم شكل السهم باستخدام clip-path */
+            clip-path: polygon(50% 0%, 100% 10%, 70% 10%, 70% 100%, 30% 100%, 30% 10%, 0% 10%);
+            border-radius: 0; 
             transition: transform 0.1s ease-out;
-            position: static; /* إعادة للوضع الطبيعي داخل الفليكس */
+            position: static; 
         }
         
         #show {
@@ -409,7 +411,7 @@
             <br>
             <button id="startCompass" onclick="requestCompassPermission()">تفعيل البوصلة</button>
             <div class="div">
-                <div id="rotatex"></div> <!-- الهيكل القديم للمؤشر -->
+                <div id="rotatex"></div> <!-- مؤشر السهم -->
             </div>
             <div id="show">ضع الهاتف على سطح مستوٍ وحركه</div>
         </div>
@@ -596,7 +598,7 @@
             localStorage.setItem("sabhaCount", 0);
         };
 
-        const colors = ["#253745", "#369a78", "#bc8f21", "#7e357e"];
+        const colors = [ "#369a78","#253745", "#bc8f21", "#7e357e"];
         let cIdx = 0;
         document.getElementById("color").onclick = () => {
             cIdx = (cIdx + 1) % colors.length;
@@ -613,8 +615,8 @@
         moodBtn.onclick = () => {
             isDark = !isDark;
             if(!isDark) {
-                // الوضع النهاري المحسن
-                document.documentElement.style.setProperty("--bg-body", "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)");
+                // الوضع النهاري المحسن (أبيض ثلجي ناعم)
+                document.documentElement.style.setProperty("--bg-body", "linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%)");
                 document.documentElement.style.setProperty("--main-color", "#2c3e50");
                 document.documentElement.style.setProperty("--glass-bg", "rgba(255, 255, 255, 0.85)");
                 document.documentElement.style.setProperty("--shadow-color", "rgba(163, 177, 198, 0.6)");
