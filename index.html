@@ -27,6 +27,8 @@
             --bg-body: linear-gradient(346deg, var(--sabha-color), #000000);
             --shadow-color: rgba(0,0,0,0.5);
             --border-qibla: var(--main-color) var(--main-color) var(--sabha-color) var(--sabha-color);
+            --needle-color: linear-gradient(to top, var(--main-color), var(--sabha-color));
+            --needle-active: linear-gradient(to top, #4ade80, #166534); /* لون أخضر عند التطابق */
         }
 
         /* --- التنسيق الأساسي --- */
@@ -301,10 +303,11 @@
         #remove {
             padding: 5px;
             width: 18px;
-            margin-bottom: 20px;
+            box-shadow: #000000 2px 2px 2px;
             height: 18px;
+            margin-bottom: 20px;
             border-radius: 50%;
-            background: linear-gradient(299deg, #ff0000, #000000);
+            background-color: rgb(90, 9, 9);
             transform: translateY(14px);
             border: none;
             cursor: pointer;
@@ -321,14 +324,14 @@
             cursor: pointer;
         }
 
-        /* --- القبلة (التصميم القديم بدقة) --- */
+        /* --- القبلة (محسن) --- */
         #conqubla { text-align: center; }
         
         #conqubla .div {
             width: 300px;
             height: 300px;
             border-radius: 50%;
-            border-style: dotted; /* الإطار المنقط القديم */
+            border-style: dotted;
             border-color: var(--border-qibla);
             border-width: 7px;
             margin: auto;
@@ -336,19 +339,27 @@
             align-items: center;
             justify-content: center;
             box-shadow: inset -1px 6px 20px 20px #ffffff26, -1px 1px 17px 1px var(--sabha-color);
-            background: none; /* إزالة الخلفية الجديدة */
+            background: none;
+            position: relative;
         }
         
-        /* مؤشر القبلة: سهم */
+        /* مؤشر القبلة: سهم مفصل */
         #rotatex {
-            background: linear-gradient(to top, var(--main-color), var(--sabha-color));
-            height: 250px;
-            width: 15px; /* عرض أكبر قليلاً لرأس السهم */
-            /* رسم شكل السهم باستخدام clip-path */
-            clip-path: polygon(50% 0%, 100% 10%, 70% 10%, 70% 100%, 30% 100%, 30% 10%, 0% 10%);
+            background: var(--needle-color);
+            height: 240px;
+            width: 16px;
+            /* شكل إبرة البوصلة */
+            clip-path: polygon(50% 0%, 80% 15%, 50% 100%, 20% 15%);
             border-radius: 0; 
-            transition: transform 0.1s ease-out;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* حركة ناعمة */
             position: static; 
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        /* حالة التطابق (لون أخضر) */
+        #rotatex.aligned {
+            background: var(--needle-active);
+            box-shadow: 0 0 15px #4ade80;
         }
         
         #show {
@@ -368,6 +379,15 @@
             cursor: pointer;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             display: none; 
+        }
+
+        /* أيقونة الكعبة في المنتصف */
+        .kaaba-center {
+            position: absolute;
+            font-size: 30px;
+            color: var(--main-color);
+            opacity: 0.8;
+            pointer-events: none;
         }
 
     </style>
@@ -407,13 +427,14 @@
     <div class="page-section" id="page-qibla">
         <div id="conqubla">
             <h2>اتجاه القبلة</h2>
-            <p>درجة الانحراف: <span id="span">0</span>°</p>
+            <p>انحراف القبلة عن الشمال: <span id="span">0</span>°</p>
             <br>
             <button id="startCompass" onclick="requestCompassPermission()">تفعيل البوصلة</button>
             <div class="div">
-                <div id="rotatex"></div> <!-- مؤشر السهم -->
+                <i class="fas fa-kaaba kaaba-center"></i>
+                <div id="rotatex"></div> <!-- السهم -->
             </div>
-            <div id="show">ضع الهاتف على سطح مستوٍ وحركه</div>
+            <div id="show">يرجى تحريك الهاتف على شكل رقم 8 للمعايرة</div>
         </div>
     </div>
 
@@ -529,11 +550,12 @@
             } catch (e) { sr.innerHTML = "<p>خطأ</p>"; }
         }
 
-        // --- 3. القبلة (محسن مع التصميم القديم) ---
+        // --- 3. القبلة (منطق محسن مع الاهتزاز) ---
         const rotatex = document.getElementById("rotatex");
         const span = document.getElementById("span");
         const startCompassBtn = document.getElementById("startCompass");
         let qiblaDir = 0;
+        let currentRotation = 0; // للحركة الناعمة
 
         function initQibla() {
             if (navigator.geolocation) {
@@ -550,8 +572,8 @@
                         window.addEventListener("deviceorientation", handleOrientation, true);
                     }
                     
-                    rotatex.style.transform = `rotate(${qiblaDir}deg)`; 
-                    span.innerHTML = Math.round(qiblaDir);
+                    // وضع مبدئي
+                    updateCompassUI(0);
                 });
             }
         }
@@ -570,14 +592,46 @@
         function handleOrientation(event) {
             let compass;
             if(event.webkitCompassHeading) {
+                // iOS
                 compass = event.webkitCompassHeading;
             } else {
+                // Android وغيره
                 compass = 360 - event.alpha;
             }
-            // حساب زاوية القبلة
-            let rotation = qiblaDir - compass;
-            rotatex.style.transform = `rotate(${rotation}deg)`;
+            
+            // حساب الزاوية المطلوبة (اتجاه القبلة - اتجاه الجهاز)
+            let targetAngle = qiblaDir - compass;
+            
+            // --- منطق الحركة الناعمة (Wrap-around Logic) ---
+            // هذا يمنع السهم من الدوران لفة كاملة عند الانتقال من 359 إلى 0
+            let diff = targetAngle - currentRotation;
+            while (diff < -180) diff += 360;
+            while (diff > 180) diff -= 360;
+            currentRotation += diff;
+            
+            updateCompassUI(currentRotation, Math.abs(diff) < 2); // تمرير دقة المحاذاة
+        }
+
+        function updateCompassUI(angle, isSteady) {
+            rotatex.style.transform = `rotate(${angle}deg)`;
             span.innerHTML = Math.round(qiblaDir);
+
+            // التحقق من المحاذاة لتشغيل الاهتزاز وتغيير اللون
+            // نتحقق من باقي القسمة على 360 لأن الزاوية قد تكون تراكمية (مثلا 720)
+            let normalizedAngle = ((angle % 360) + 360) % 360;
+            
+            // إذا كان السهم يشير للأعلى (0 درجة) بتسامح +/- 5 درجات
+            // يعني القبلة أمام الجهاز مباشرة
+            if (normalizedAngle < 5 || normalizedAngle > 355) {
+                rotatex.classList.add('aligned');
+                if (navigator.vibrate && isSteady) {
+                    // اهتزاز خفيف لتنبيه المستخدم (مرة واحدة كل فترة لتجنب الازعاج يمكن ضبطه)
+                    // هنا سيهتز بشكل مستمر خفيف طالما هو مصوب
+                   // navigator.vibrate(10); 
+                }
+            } else {
+                rotatex.classList.remove('aligned');
+            }
         }
 
         // --- 4. السبحة ---
@@ -598,7 +652,7 @@
             localStorage.setItem("sabhaCount", 0);
         };
 
-        const colors = [ "#369a78","#253745", "#bc8f21", "#7e357e"];
+        const colors = ["#253745", "#369a78", "#bc8f21", "#7e357e"];
         let cIdx = 0;
         document.getElementById("color").onclick = () => {
             cIdx = (cIdx + 1) % colors.length;
@@ -608,21 +662,20 @@
             sabhaCon.style.border = (cIdx % 2 == 0) ? "2px double white" : "2px double green";
         };
 
-        // --- الوضع الليلي/النهاري (محسن) ---
+        // --- الوضع الليلي/النهاري ---
         const moodBtn = document.getElementById("mood");
         let isDark = true;
         
         moodBtn.onclick = () => {
             isDark = !isDark;
             if(!isDark) {
-                // الوضع النهاري المحسن (أبيض ثلجي ناعم)
+                // الوضع النهاري (أبيض ثلجي فاخر)
                 document.documentElement.style.setProperty("--bg-body", "linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%)");
                 document.documentElement.style.setProperty("--main-color", "#2c3e50");
                 document.documentElement.style.setProperty("--glass-bg", "rgba(255, 255, 255, 0.85)");
                 document.documentElement.style.setProperty("--shadow-color", "rgba(163, 177, 198, 0.6)");
                 document.documentElement.style.setProperty("--input-bg", "#dfe6e9");
                 document.documentElement.style.setProperty("--select-bg", "#34495e");
-                // تحديث حدود القبلة لتناسب الفاتح
                 document.documentElement.style.setProperty("--border-qibla", "#2c3e50 #2c3e50 var(--sabha-color) var(--sabha-color)");
                 
                 moodBtn.innerHTML = '<i class="fa fa-sun-o" style="color:#f39c12"></i>';
