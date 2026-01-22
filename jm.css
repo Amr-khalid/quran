@@ -1,0 +1,364 @@
+* {
+  margin: 0;
+  padding: 0;
+  color: var(--color);
+  perspective: 600px;
+}
+:root {
+  --color: white;
+  --liner: 346deg, #253745, #000000;
+  --colo2: #0e141a;
+  --colorsabha: rgb(48, 73, 92);
+}
+body {
+  background: linear-gradient(346deg, var(--colorsabha), #000000);
+  height: 100vh;
+  overflow-x: hidden;
+}
+ul {
+  list-style: none;
+  transition: 0.8s;
+}
+li {
+  display: flex;
+  justify-content: space-between;
+  color: var(--color);
+  font-size: 24px;
+  margin: 15px 0px;
+  padding: 15px;
+
+  transition: 0.9s;
+  box-shadow: 0px 20px 20px #00000087;
+}
+.contime {
+  display: flex;
+  flex-direction: column;
+}
+.cb,
+.cf {
+  display: flex;
+  flex-direction: row;
+  padding: 5px;
+  justify-content: space-between;
+  text-align: center;
+  font-size: 16px;
+  border-radius: 20px;
+  font-style: italic;
+  position: fixed;
+  direction: rtl;
+}
+.cb {
+  backface-visibility: hidden;
+  transform: rotatey(180deg);
+  backdrop-filter: blur(8px);
+}
+@keyframes b{0%{transform: rotatey(0deg);
+    box-shadow: -3px 20px 13px 6px var(--colorsabha);}
+100%{transform: rotatey(180deg);
+    box-shadow: -3px 20px 13px 6px var(--color2); }
+
+}
+.tare {
+  justify-content: center;
+  display: flex;
+  bottom: 30px;
+  perspective: 600px;
+  box-shadow: -3px 20px 13px 6px var(--color);
+  width: 350px;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: 1s linear;
+  margin: auto;
+  z-index: 1000;
+  animation: b 10s 1 3s ;
+}
+.tare:hover {
+  transform: rotatey(180deg);
+    box-shadow: -3px 20px 13px 6px var(--color2);
+
+}
+.groupButton {
+  display: flex;
+  justify-content: space-evenly;
+  border: #253745 2px solid;
+  border-radius: 30px;
+  background: linear-gradient(346deg, var(--colorsabha), #00000051);
+  box-shadow: 0px 20px 20px #000000;
+}
+.groupButton b {
+  width: 100px;
+  font-size: 60px;
+  color: aliceblue;
+
+  border-radius: 50%;
+  cursor: pointer;
+  transition: 1s;
+}
+ul:hover li {
+  letter-spacing: 2px;
+  box-shadow: 0px 20px 11px var(--colorsabha);
+}
+ul li:hover {
+  box-shadow: var(--colo2) 2px 2px 6px 3px;
+  filter: blur(0);
+}
+.row1 {
+  animation: op 1.5s 1 linear;
+}
+.row2 {
+  animation: op 1.8s 1 linear;
+}
+.row3 {
+  animation: op 2.1s 1 linear;
+}
+.row4 {
+  animation: op 2.4s 1 linear;
+}
+.row5 {
+  animation: op 2.7s 1 linear;
+}
+.row6 {
+  animation: op 3s 1 linear;
+}
+
+@keyframes op {
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+    transform: scale3d(0.7);
+  }
+}
+.cq {
+  display: none;
+  direction: rtl;
+}
+select {
+  direction: ltr;
+  width: 100%;
+  background-color: var(--colorsabha);
+  text-align: center;
+  font-size: 30px;
+  border-radius: 20px;
+  box-shadow: inset #2d3b43 0px -14px 20px 0px;
+  font-family: cursive;
+}
+.ayaha {
+  margin-left: 2px;
+  font-size: 22px;
+  line-height: 1.6;
+  font-family: monospace;
+}
+#logo {
+  width: 60px;
+  animation: rotat 15s linear infinite;
+}
+@keyframes rotat {
+  0% {
+    transform: rotatex(0deg);
+  }
+  100% {
+    transform: rotatey(360deg) rotateX(360deg);
+  }
+}
+#mood {
+  color: var(--color);
+  font-size: 30px;
+}
+#b4 i {
+  animation: rot 3s infinite;
+}
+@keyframes rot {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+#b1 i {
+  animation: green 15s infinite both 2s;
+}
+@keyframes green {
+  0% {
+    color: aliceblue;
+  }
+  100% {
+    color: green;
+  }
+}
+
+#b3 i {
+  animation: grow 6s infinite both;
+}
+@keyframes grow {
+  0% {
+    box-shadow: 1px 2px 0px 0px rgb(0, 0, 0);
+  }
+  100% {
+    transform: skewy(2odeg);
+  }
+}
+
+b:hover {
+  transform: scale(1.1) skewY(10deg);
+}
+#sabha {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 170px;
+  height: 200px;
+  border-radius: 77px 76px 106px 106px;
+  background: linear-gradient(299deg, rgb(0, 0, 0), var(--colorsabha));
+  margin: auto;
+  gap: 2px;
+  border: 2px double rgb(19, 12, 12);
+  box-shadow: 4px 5px 7px 1px var(--colorsabha);
+  display: none;
+}
+#disnumber {
+  border: 2px solid rgba(255, 255, 255, 0.371);
+  width: 80%;
+  color: white;
+  text-align: center;
+  background-color: #00000061;
+  border-radius: 10px;
+  transform: translateY(-10px);
+  height: 30px;
+  padding: 50xp;
+  box-shadow: 3px 7px 3px 5px #09080873;
+  font-size: 20px;
+  font-family: none;
+}
+#sabha div {
+  display: flex;
+  justify-content: space-evenly;
+  gap: 9px;
+}
+#plus {
+  padding: 5px;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background-color: #cacaca;
+  transform: translate(10px);
+}
+#remove {
+  padding: 5px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: rgb(22, 22, 22);
+  transform: translateY(14px);
+}
+#color {
+  padding: 5px;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: linear-gradient(
+    299deg,
+    green,
+    gold,
+    pink,
+    #d54a4a,
+    rgb(8, 25, 85),
+    rgb(204 160 203),
+    white
+  );
+  transform: translate(-4px, 6px);
+}
+#sabha button {
+  box-shadow: 3px 7px 3px 5px #09080880;
+}
+.st {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transform: rotate(26deg);
+}
+#conqubla {
+  display: none;
+}
+#conqubla .div {
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  border-style: dotted;
+  border-color: var(--color) var(--color) var(--colorsabha) var(--colorsabha);
+  border-width: 7px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset -1px 6px 20px 20px #ffffff26,
+    -1px 1px 17px 1px var(--colorsabha);
+}
+#conqubla .div p {
+  background: linear-gradient(299deg, var(--colorsabha), var(--color));
+  height: 250px;
+  width: 10px;
+  border-radius: 68% 95%;
+}
+#show {
+  margin: auto;
+  position: absolute;
+  left: 46.4%;
+  margin-top: 10px;
+  font-size: 10px;
+  font-family: "Courier New", Courier, monospace;
+}
+span {
+  position: absolute;
+  left: 49%;
+  margin-top: -30px;
+}
+
+#s2 {
+  width: 100%;
+  direction: rtl;
+  font-size: 20px;
+  color: var(--color);
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+}
+#s2 p {
+  background-color: #00000053;
+  border-top: 2px inset white;
+  transition: 1s steps(2);
+  margin: 7px;
+}
+#s2 p:hover {
+  background-color: #25374557;
+  text-align: center;
+  font-size: 25px;
+}
+
+@media screen and (max-width: 800px) {
+  span {
+    left: 47%;
+  }
+  #show {
+    left: 37%;
+  }
+  #sabha {
+    margin-top: 170px;
+    transform: scale(1.1);
+  }
+  input[type="date"] {
+    width: 100%;
+    background-color: #0000003e;
+    border-radius: 20px;
+  }
+  #disnumber {
+    font-size: 25px;
+  }
+
+}
+
