@@ -1,0 +1,42 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 500' width='500' height='500'>
+  <g fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round'>
+    <!-- Outer Decorative Concentric Rings -->
+    <circle cx='250' cy='250' r='238' stroke-width='1.5'/>
+    <circle cx='250' cy='250' r='232' stroke-width='0.75' stroke-dasharray='3,4'/>
+    <circle cx='250' cy='250' r='220' stroke-width='2'/>
+    <circle cx='250' cy='250' r='198' stroke-width='1'/>
+
+    <!-- 16-point Outer Islamic Crown Star Points -->
+    <path d='M250,15 L262,45 L292,30 L295,62 L328,58 L320,89 L352,95 L334,122 L364,138 L338,160 L362,184 L330,198 L348,228 L312,234 L322,266 L284,264 L286,296 L250,285 L214,296 L216,264 L178,266 L188,234 L152,228 L170,198 L138,184 L162,160 L136,138 L166,122 L148,95 L180,89 L172,58 L205,62 L208,30 L238,45 Z' stroke-width='1.5'/>
+
+    <!-- Middle Arabesque Petals (Rotated 12-Fold Geometry) -->
+    <g stroke-width='1.2'>
+      <circle cx='250' cy='150' r='45'/>
+      <circle cx='250' cy='350' r='45'/>
+      <circle cx='150' cy='250' r='45'/>
+      <circle cx='350' cy='250' r='45'/>
+      <circle cx='179' cy='179' r='45'/>
+      <circle cx='321' cy='179' r='45'/>
+      <circle cx='179' cy='321' r='45'/>
+      <circle cx='321' cy='321' r='45'/>
+    </g>
+
+    <!-- Inner Rub el Hizb Star Frame -->
+    <rect x='170' y='170' width='160' height='160' stroke-width='2'/>
+    <rect x='170' y='170' width='160' height='160' stroke-width='2' transform='rotate(45 250 250)'/>
+    <circle cx='250' cy='250' r='95' stroke-width='1.5'/>
+    <circle cx='250' cy='250' r='88' stroke-width='0.75' stroke-dasharray='2,3'/>
+
+    <!-- Central Grand Crescent & 8-point Star Emblem (الهلال والنجمة الإسلامية) -->
+    <!-- Crescent Moon -->
+    <path d='M262,205 A52,52 0 1,0 262,295 A42,42 0 1,1 262,205 Z' fill='currentColor' opacity='0.75'/>
+    <!-- Star nestled in Crescent -->
+    <polygon points='272,238 276,246 285,244 280,251 285,258 276,256 272,264 268,256 259,258 264,251 259,244 268,246' fill='currentColor' opacity='0.85'/>
+
+    <!-- Decorative Corner Arabesques (Palmettes in 4 Cardinal Corners) -->
+    <path d='M250,55 Q250,85 235,100 Q250,115 265,100 Q250,85 250,55 Z' stroke-width='1'/>
+    <path d='M250,445 Q250,415 235,400 Q250,385 265,400 Q250,415 250,445 Z' stroke-width='1'/>
+    <path d='M55,250 Q85,250 100,235 Q115,250 100,265 Q85,250 55,250 Z' stroke-width='1'/>
+    <path d='M445,250 Q415,250 400,235 Q385,250 400,265 Q415,250 445,250 Z' stroke-width='1'/>
+  </g>
+</svg>

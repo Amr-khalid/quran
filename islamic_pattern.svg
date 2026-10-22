@@ -1,0 +1,36 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'>
+  <g fill='none' stroke='currentColor' stroke-width='0.75' stroke-linecap='round' stroke-linejoin='round'>
+    <!-- Center 8-point Star -->
+    <polygon points='40,24 44,32 52,28 48,36 56,40 48,44 52,52 44,48 40,56 36,48 28,52 32,44 24,40 32,36 28,28 36,32'/>
+    <!-- Center Overlapping Squares -->
+    <rect x='30' y='30' width='20' height='20'/>
+    <rect x='30' y='30' width='20' height='20' transform='rotate(45 40 40)'/>
+    <circle cx='40' cy='40' r='6'/>
+
+    <!-- 4 Corners: Quadrants of 8-point star -->
+    <!-- Top-Left -->
+    <polygon points='0,0 4,8 12,4 8,12 16,16 8,20 12,28 4,24 0,32'/>
+    <rect x='-10' y='-10' width='20' height='20'/>
+    <rect x='-10' y='-10' width='20' height='20' transform='rotate(45 0 0)'/>
+    <!-- Top-Right -->
+    <polygon points='80,0 76,8 68,4 72,12 64,16 72,20 68,28 76,24 80,32'/>
+    <rect x='70' y='-10' width='20' height='20'/>
+    <rect x='70' y='-10' width='20' height='20' transform='rotate(45 80 0)'/>
+    <!-- Bottom-Left -->
+    <polygon points='0,80 4,72 12,76 8,68 16,64 8,60 12,52 4,56 0,48'/>
+    <rect x='-10' y='70' width='20' height='20'/>
+    <rect x='-10' y='70' width='20' height='20' transform='rotate(45 0 80)'/>
+    <!-- Bottom-Right -->
+    <polygon points='80,80 76,72 68,76 72,68 64,64 72,60 68,52 76,56 80,48'/>
+    <rect x='70' y='70' width='20' height='20'/>
+    <rect x='70' y='70' width='20' height='20' transform='rotate(45 80 80)'/>
+
+    <!-- Interlocking Grid Lines -->
+    <line x1='0' y1='40' x2='80' y2='40' stroke-dasharray='2,4'/>
+    <line x1='40' y1='0' x2='40' y2='80' stroke-dasharray='2,4'/>
+    <circle cx='40' cy='0' r='8'/>
+    <circle cx='40' cy='80' r='8'/>
+    <circle cx='0' cy='40' r='8'/>
+    <circle cx='80' cy='40' r='8'/>
+  </g>
+</svg>

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>القرآن الكريم — تلاوة صوتية وبحث في الآيات — المشروع الإسلامي الشامل</title>
+    
+    <!-- SEO & Metadata -->
+    <meta name="description" content="اقرأ واستمع إلى القرآن الكريم كاملاً بصوت الشيخ مشاري العفاسي مع خاصية البحث الفوري في آيات وسور المصحف الشريف.">
+    <meta name="keywords" content="قرآن كريم, تلاوة صوتية, استماع للقرآن, مشاري العفاسي, بحث في الآيات, سور القرآن">
+    <meta name="theme-color" content="#0a1118">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="القرآن الكريم — المشروع الإسلامي الشامل">
+    <meta property="og:description" content="تلاوة القرآن الكريم كاملاً والبحث في الآيات مع استماع صوتي نقي.">
+    <meta property="og:type" content="website">
+
+    <!-- PWA & Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e5b869' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z'/></svg>">
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="style.css?v=4">
+</head>
+<body>
+
+    <!-- ==============================================
+         قائمة التصفح والبحث الجانبية (Side Menu Drawer)
+         ============================================== -->
+    <div class="drawer-overlay" id="drawer-overlay"></div>
+    <aside class="side-menu-drawer" id="side-menu-drawer" aria-hidden="true">
+        <div class="drawer-header">
+            <div class="drawer-brand">
+                <svg class="koboyo-icon icon-md" viewBox="0 0 24 24" style="color: var(--accent-gold);">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                </svg>
+                <div class="drawer-brand-text">
+                    <h3>المصحف الشريف</h3>
+                    <span>المشروع الإسلامي</span>
+                </div>
+            </div>
+            <button class="drawer-close-btn" id="drawer-close-btn" title="إغلاق القائمة">
+                <svg class="koboyo-icon icon-sm" viewBox="0 0 24 24">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+
+        <div class="drawer-scroll-body">
+            <!-- 1. موضع القراءة الحالي ومتابعته -->
+            <div class="drawer-section">
+                <div class="drawer-section-title">متابعة القراءة الحالية</div>
+                <div class="drawer-reading-pill" id="drawer-current-read-card">
+                    <div class="reading-pill-info">
+                        <strong id="drawer-read-surah">سورة الفاتحة</strong>
+                        <span id="drawer-read-meta">الجزء الأول • الآية ١</span>
+                    </div>
+                    <button class="reading-pill-jump-btn" id="drawer-jump-read-btn" title="الذهاب للآية">
+                        <svg class="koboyo-icon icon-sm" viewBox="0 0 24 24">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 2. البحث السريع عن سورة -->
+            <div class="drawer-section">
+                <div class="drawer-section-title">البحث عن سورة</div>
+                <div class="drawer-search-wrap">
+                    <svg class="koboyo-icon search-icon-pos" viewBox="0 0 24 24">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" id="drawer-surah-search" class="drawer-search-input" placeholder="ابحث باسم السورة (مثلاً: الكهف، يس، الملك)...">
+                </div>
+            </div>
+
+            <!-- 3. السور المفضلة (Favorites) -->
+            <div class="drawer-section">
+                <div class="drawer-section-title">السور المفضلة</div>
+                <div class="drawer-favorites-grid" id="drawer-favorites-list">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+
+            <!-- 4. فهرس وتصفية سور القرآن -->
+            <div class="drawer-section">
+                <div class="drawer-section-title">فهرس وتصفية السور</div>
+                <div class="drawer-filter-pills">
+                    <button class="drawer-pill-btn active" data-filter="all">الكل (١١٤)</button>
+                    <button class="drawer-pill-btn" data-filter="Meccan">مكية (٨٦)</button>
+                    <button class="drawer-pill-btn" data-filter="Medinan">مدنية (٢٨)</button>
+                </div>
+                <div class="drawer-juz-wrap">
+                    <select id="drawer-juz-select" class="drawer-juz-select">
+                        <option value="all">كافة الأجزاء (١ - ٣٠)</option>
+                    </select>
+                </div>
+                <div class="drawer-surahs-list" id="drawer-surahs-list">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+
+            <!-- 5. المظهر (Dark / Light Mode) -->
+            <div class="drawer-section">
+                <div class="drawer-section-title">المظهر والعرض</div>
+                <div class="drawer-theme-card">
+                    <div class="theme-card-info">
+                        <span id="drawer-theme-name">الوضع الليلي</span>
+                    </div>
+                    <button class="drawer-theme-btn" id="drawer-theme-toggle" title="تبديل المظهر">
+                        <svg class="koboyo-icon icon-sm" viewBox="0 0 24 24" id="drawer-theme-icon">
+                            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"></path>
+                        </svg>
+                        <span id="drawer-theme-btn-label">نهاري</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 6. التنقل إلى أقسام التطبيق الأخرى -->
+            <div class="drawer-section">
+                <div class="drawer-section-title">أقسام التطبيق</div>
+                <div class="drawer-links-list">
+                    <a href="index.html" class="drawer-link-item">
+                        <svg class="koboyo-icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 15 15"></polyline></svg>
+                        <span>مواقيت الصلاة</span>
+                    </a>
+                    <a href="qibla.html" class="drawer-link-item">
+                        <svg class="koboyo-icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
+                        <span>اتجاه القبلة</span>
+                    </a>
+                    <a href="adhkar.html" class="drawer-link-item">
+                        <svg class="koboyo-icon icon-sm" viewBox="0 0 24 24"><path d="M12 10a6 6 0 0 0 -6 -6h-3v2a6 6 0 0 0 6 6h3"></path><path d="M12 14a6 6 0 0 1 6 -6h3v1a6 6 0 0 1 -6 6h-3"></path><path d="M12 20v-10"></path></svg>
+                        <span>حصن المسلم والأذكار</span>
+                    </a>
+                    <a href="masbaha.html" class="drawer-link-item">
+                        <svg class="koboyo-icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="6" r="2"></circle><circle cx="17" cy="8" r="2"></circle><circle cx="19" cy="13" r="2"></circle><circle cx="17" cy="18" r="2"></circle><circle cx="12" cy="20" r="2"></circle><path d="M12 11c0 3.866-2.239 7-5 7s-5-3.134-5-7 2.239-7 5-7 5 3.134 5 7z"></path></svg>
+                        <span>السبحة الإلكترونية</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ==============================================
+         الهيدر العلوي البسيط والفاخر (Minimal Header)
+         الأيقونة على الشمال، واسم السورة ورقم الجزء بالمنتصف
+         ============================================== -->
+    <header class="quran-minimal-header">
+        <!-- Left: Menu Icon Button -->
+        <button id="open-drawer-btn" class="quran-header-btn" title="فتح القائمة الرئيسية">
+            <svg class="koboyo-icon" viewBox="0 0 24 24">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
+
+        <!-- Center: Prominent Surah Name & Juz Number -->
+        <div class="quran-header-center">
+            <h1 class="header-surah-title" id="top-surah-name">سورة الفاتحة</h1>
+            <div class="header-surah-subtitle">
+                <span id="top-juz-name">الجزء الأول</span>
+                <span class="subtitle-separator">•</span>
+                <span id="top-revelation-type">مكية</span>
+            </div>
+        </div>
+
+        <!-- Right: Favorite Toggle & Play Surah -->
+        <div class="quran-header-actions">
+            <button id="toggle-favorite-btn" class="quran-header-btn" title="إضافة للسور المفضلة">
+                <svg class="koboyo-icon" viewBox="0 0 24 24" id="fav-star-icon">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+            </button>
+            <button id="top-play-surah-btn" class="quran-header-btn audio-trigger" title="استماع للسورة كاملة">
+                <svg class="koboyo-icon icon-sm" viewBox="0 0 24 24" id="top-play-icon">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- ==============================================
+         منطقة عرض المصحف الشريف بتقليب الصفحات الأفقي
+         ============================================== -->
+    <main class="quran-mushaf-main">
+        <!-- Horizontal Swiper Container for Mushaf Pages -->
+        <div class="mushaf-slider-wrapper">
+            <!-- Left Arrow Button (Next in RTL) -->
+            <button class="mushaf-nav-arrow next-arrow" id="page-next-arrow" title="الصفحة التالية">
+                <svg class="koboyo-icon" viewBox="0 0 24 24">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </button>
+
+            <!-- Scroll-Snap Track of Pages -->
+            <div class="mushaf-pages-track" id="mushaf-pages-track">
+                <!-- Skeleton loader -->
+                <div class="mushaf-page-card skeleton-page">
+                    <div class="skeleton-shimmer skeleton-pill" style="width: 40%; height: 26px; margin: 0 auto 24px;"></div>
+                    <div class="skeleton-shimmer skeleton-pill" style="width: 95%; height: 18px; margin-bottom: 14px;"></div>
+                    <div class="skeleton-shimmer skeleton-pill" style="width: 90%; height: 18px; margin-bottom: 14px;"></div>
+                    <div class="skeleton-shimmer skeleton-pill" style="width: 85%; height: 18px; margin-bottom: 14px;"></div>
+                    <div class="skeleton-shimmer skeleton-pill" style="width: 80%; height: 18px;"></div>
+                </div>
+            </div>
+
+            <!-- Right Arrow Button (Prev in RTL) -->
+            <button class="mushaf-nav-arrow prev-arrow" id="page-prev-arrow" title="الصفحة السابقة">
+                <svg class="koboyo-icon" viewBox="0 0 24 24">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Floating Bottom Page Navigation Pill -->
+        <div class="mushaf-page-indicator-pill" id="mushaf-page-indicator-pill">
+            <button class="page-pill-nav" id="pill-prev-btn" title="السابقة">
+                <svg class="koboyo-icon icon-xs" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </button>
+            <span class="page-pill-label" id="mushaf-page-counter">صفحة ١ من ١</span>
+            <button class="page-pill-nav" id="pill-next-btn" title="التالية">
+                <svg class="koboyo-icon icon-xs" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
+        </div>
+    </main>
+
+    <!-- ==============================================
+         مشغل التلاوة الصوتي المخصص للهاتف (Mobile Audio Dock)
+         ============================================== -->
+    <div class="mobile-audio-dock" id="mobile-audio-dock" style="display: none;">
+        <!-- Scrubber Progress Line on top -->
+        <div class="dock-scrubber-track" id="dock-scrubber-track">
+            <div class="dock-scrubber-fill" id="dock-scrubber-fill"></div>
+        </div>
+
+        <div class="dock-main-row">
+            <!-- Left / Start: Surah, Ayah & Reciter Details -->
+            <div class="dock-info-box">
+                <div class="dock-title-row">
+                    <span class="dock-pulse-indicator"></span>
+                    <strong class="dock-surah-name" id="dock-surah-label">سورة الفاتحة</strong>
+                    <span class="dock-ayah-num" id="dock-ayah-label">الآية ١</span>
+                </div>
+                <div class="dock-reciter-name" id="dock-reciter-label">تلاوة الشيخ مشاري العفاسي</div>
+            </div>
+
+            <!-- Right / End: Touch-Friendly Audio Controls -->
+            <div class="dock-controls-group">
+                <!-- Previous Ayah -->
+                <button class="dock-btn-step" id="dock-prev-ayah-btn" title="الآية السابقة">
+                    <svg class="koboyo-icon icon-sm" viewBox="0 0 24 24">
+                        <polygon points="5 4 15 12 5 20 5 4"></polygon>
+                        <line x1="19" y1="5" x2="19" y2="19"></line>
+                    </svg>
+                </button>
+
+                <!-- Big Main Play/Pause Circle (Thumb Friendly) -->
+                <button class="dock-play-circle" id="dock-play-btn" title="تشغيل / إيقاف التلاوة">
+                    <svg class="koboyo-icon icon-md" viewBox="0 0 24 24" id="dock-play-icon">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                </button>
+
+                <!-- Next Ayah -->
+                <button class="dock-btn-step" id="dock-next-ayah-btn" title="الآية التالية">
+                    <svg class="koboyo-icon icon-sm" viewBox="0 0 24 24">
+                        <polygon points="19 20 9 12 19 4 19 20"></polygon>
+                        <line x1="5" y1="19" x2="5" y2="5"></line>
+                    </svg>
+                </button>
+
+                <!-- Stop & Dismiss Button -->
+                <button class="dock-btn-close" id="dock-close-btn" title="إيقاف وإخفاء المشغل">
+                    <svg class="koboyo-icon icon-sm" viewBox="0 0 24 24">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Time & Duration Labels -->
+        <div class="dock-time-row">
+            <span id="dock-time-elapsed">00:00</span>
+            <span id="dock-time-duration">--:--</span>
+        </div>
+    </div>
+
+    <!-- ==============================================
+         Bottom Navigation Bar (5 Tabs with Koboyo Icons)
+         ============================================== -->
+    <nav class="bottom-nav-container">
+        <!-- 1. Adhkar -->
+        <a href="adhkar.html" class="nav-tab-btn" title="الأذكار">
+            <svg class="koboyo-icon" viewBox="0 0 24 24">
+                <path d="M12 10a6 6 0 0 0 -6 -6h-3v2a6 6 0 0 0 6 6h3"></path>
+                <path d="M12 14a6 6 0 0 1 6 -6h3v1a6 6 0 0 1 -6 6h-3"></path>
+                <path d="M12 20v-10"></path>
+            </svg>
+            <span>الأذكار</span>
+        </a>
+
+        <!-- 2. Prayer Times -->
+        <a href="index.html" class="nav-tab-btn" title="المواقيت">
+            <svg class="koboyo-icon" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="9"></circle>
+                <polyline points="12 7 12 12 15 15"></polyline>
+            </svg>
+            <span>المواقيت</span>
+        </a>
+
+        <!-- 3. Quran (Active on this page) -->
+        <a href="quran.html" class="nav-tab-btn active" title="القرآن">
+            <svg class="koboyo-icon" viewBox="0 0 24 24">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+            </svg>
+            <span>القرآن</span>
+        </a>
+
+        <!-- 4. Qibla -->
+        <a href="qibla.html" class="nav-tab-btn" title="القبلة">
+            <svg class="koboyo-icon" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+            </svg>
+            <span>القبلة</span>
+        </a>
+
+        <!-- 5. Sabha -->
+        <a href="masbaha.html" class="nav-tab-btn" title="السبحة">
+            <svg class="koboyo-icon" viewBox="0 0 24 24">
+                <circle cx="12" cy="6" r="2"></circle>
+                <circle cx="17" cy="8" r="2"></circle>
+                <circle cx="19" cy="13" r="2"></circle>
+                <circle cx="17" cy="18" r="2"></circle>
+                <circle cx="12" cy="20" r="2"></circle>
+                <path d="M12 11c0 3.866-2.239 7-5 7s-5-3.134-5-7 2.239-7 5-7 5 3.134 5 7z"></path>
+            </svg>
+            <span>السبحة</span>
+        </a>
+    </nav>
+
+    <!-- App Logic Engine -->
+    <script src="app.js?v=4"></script>
+</body>
+</html>
